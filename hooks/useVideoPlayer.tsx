@@ -6,6 +6,18 @@ export const useVideoPlayer = (videoElement: any) => {
     progress: 0,
     muted: false,
   });
+  const [currentLength, setCurrentLength] = useState(0);
+  const [displayControls, setDisplayControls] = useState(false);
+
+  // make controls visible
+  const handleHiddenControls = () => {
+    if (!displayControls) {
+      setDisplayControls(true);
+      setTimeout(() => {
+        setDisplayControls(false);
+      }, 2000);
+    }
+  };
 
   // play/pause function
   const handlePlay = () => {
@@ -22,6 +34,10 @@ export const useVideoPlayer = (videoElement: any) => {
   }, [videoPlayer.playing, videoElement]);
 
   // Progress bar function -> how much has been watched
+  const totalTime =
+    (videoElement && videoElement.current && videoElement.current.duration) ||
+    0;
+  const startTime = Math.floor(currentLength);
 
   const handleTimeUpdate = () => {
     const progress =
@@ -33,16 +49,26 @@ export const useVideoPlayer = (videoElement: any) => {
   };
 
   // Progress bar function -> dragging the progress bar to where we want to watch
-  const handleProgressBar = (e: any) => {
-    const rePosition = Number(e.target.value);
-    console.log(rePosition);
-    videoElement.current.currentTime =
-      (videoElement.current.duration / 100) * rePosition;
-    setVideoPlayer({
-      ...videoPlayer,
-      progress: rePosition,
-    });
+  const handleProgressBar = (percent: number) => {
+    if (!displayControls) {
+      setDisplayControls(true);
+    }
+    if (videoElement) {
+      const playingTime = videoElement.duration * (percent / 100);
+      setCurrentLength(playingTime);
+    }
   };
+
+  //   const handleProgressBar = (e: any) => {
+  //     const rePosition = Number(e.target.value);
+  //     console.log(rePosition);
+  //     videoElement.current.currentTime =
+  //       (videoElement.current.duration / 100) * rePosition;
+  //     setVideoPlayer({
+  //       ...videoPlayer,
+  //       progress: rePosition,
+  //     });
+  //   };
 
   // volume mute function
   const handleMute = () => {
@@ -60,8 +86,13 @@ export const useVideoPlayer = (videoElement: any) => {
 
   return {
     videoPlayer,
+    handleHiddenControls,
     handlePlay,
+    currentLength,
+    startTime,
+    totalTime,
     handleTimeUpdate,
+    displayControls,
     handleProgressBar,
     handleMute,
   };

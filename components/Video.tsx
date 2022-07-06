@@ -8,20 +8,33 @@ const Video = () => {
   const videoElement = useRef<HTMLVideoElement>(null);
   const {
     videoPlayer,
+    handleHiddenControls,
     handlePlay,
+    currentLength,
+    startTime,
+    totalTime,
     handleTimeUpdate,
+    displayControls,
     handleProgressBar,
     handleMute,
   } = useVideoPlayer(videoElement);
 
   return (
     <VideoContainer>
-      <VideoContent ref={videoElement} onTimeUpdate={handleTimeUpdate}>
+      <VideoContent
+        ref={videoElement}
+        onClick={handleHiddenControls}
+        onTimeUpdate={handleTimeUpdate}
+      >
         <source src={videoSrc} type="video/mp4" />
       </VideoContent>
       <Controls
         videoPlayer={videoPlayer}
         handlePlay={handlePlay}
+        currentLength={currentLength}
+        startTime={startTime}
+        totalTime={totalTime}
+        displayControls={displayControls}
         handleProgressBar={handleProgressBar}
         handleMute={handleMute}
       />

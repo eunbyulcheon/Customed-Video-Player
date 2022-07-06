@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import { ChangeEvent } from 'react';
 import styled from 'styled-components';
 
 interface VideoProps {
@@ -9,13 +8,20 @@ interface VideoProps {
     muted: boolean;
   };
   handlePlay: () => void;
-  handleProgressBar: (percent: number) => void;
+  currentLength: number;
+  startTime: number;
+  totalTime: any;
+  displayControls: boolean;
+  handleProgressBar: any;
   handleMute: () => void;
 }
 
 const Controls: React.FC<VideoProps> = ({
   videoPlayer,
   handlePlay,
+  currentLength,
+  startTime,
+  totalTime,
   handleProgressBar,
   handleMute,
 }) => {
@@ -33,13 +39,12 @@ const Controls: React.FC<VideoProps> = ({
       <VideoLength>
         <Range
           type="range"
-          min="0"
-          max="100"
-          value={videoPlayer.progress}
-          onChange={(e: any) => handleProgressBar(e)}
+          value={currentLength}
+          max={totalTime}
+          onChange={handleProgressBar}
         />
-        <CurrentLength>00:00</CurrentLength>
-        <TotalLength>00:00</TotalLength>
+        <CurrentLength>{startTime}</CurrentLength>
+        <TotalLength>{totalTime}</TotalLength>
       </VideoLength>
 
       <VolumeButton onClick={handleMute}>
