@@ -7,32 +7,33 @@ import styled from 'styled-components';
 const Video = () => {
   const videoElement = useRef<HTMLVideoElement>(null);
   const {
-    videoPlayer,
-    handleHiddenControls,
+    videoPlaying,
+    handleDisplayControls,
     handlePlay,
-    currentLength,
-    startTime,
     totalTime,
     handleTimeUpdate,
     displayControls,
     handleProgressBar,
     handleMute,
+    handleOnKeyDown,
   } = useVideoPlayer(videoElement);
+
+  //   console.log(videoElement);
 
   return (
     <VideoContainer>
       <VideoContent
+        tabIndex={0}
         ref={videoElement}
-        onClick={handleHiddenControls}
+        onClick={handleDisplayControls}
         onTimeUpdate={handleTimeUpdate}
+        onKeyDown={e => handleOnKeyDown(e)}
       >
         <source src={videoSrc} type="video/mp4" />
       </VideoContent>
       <Controls
-        videoPlayer={videoPlayer}
+        videoPlaying={videoPlaying}
         handlePlay={handlePlay}
-        currentLength={currentLength}
-        startTime={startTime}
         totalTime={totalTime}
         displayControls={displayControls}
         handleProgressBar={handleProgressBar}
@@ -48,6 +49,8 @@ const VideoContainer = styled.div`
 `;
 
 const VideoContent = styled.video`
+  outline: none;
+
   &::-webkit-media-controls {
     display: none;
   }

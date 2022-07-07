@@ -1,16 +1,15 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export const useVideoPlayer = (videoElement: any) => {
-  const [videoPlayer, setVideoPlayer] = useState({
+  const [videoPlaying, setVideoPlaying] = useState({
     playing: false,
     progress: 0,
     muted: false,
   });
-  const [currentLength, setCurrentLength] = useState(0);
   const [displayControls, setDisplayControls] = useState(false);
 
   // make controls visible
-  const handleHiddenControls = () => {
+  const handleDisplayControls = () => {
     if (!displayControls) {
       setDisplayControls(true);
       setTimeout(() => {
@@ -21,79 +20,96 @@ export const useVideoPlayer = (videoElement: any) => {
 
   // play/pause function
   const handlePlay = () => {
-    setVideoPlayer({
-      ...videoPlayer,
-      playing: !videoPlayer.playing,
+    setVideoPlaying({
+      ...videoPlaying,
+      playing: !videoPlaying.playing,
     });
   };
 
   useEffect(() => {
-    videoPlayer.playing
+    videoPlaying.playing
       ? videoElement.current.play()
       : videoElement.current.pause();
-  }, [videoPlayer.playing, videoElement]);
+  }, [videoPlaying.playing, videoElement]);
 
   // Progress bar function -> how much has been watched
   const totalTime =
     (videoElement && videoElement.current && videoElement.current.duration) ||
     0;
-  const startTime = Math.floor(currentLength);
 
   const handleTimeUpdate = () => {
     const progress =
       (videoElement.current.currentTime / videoElement.current.duration) * 100;
-    setVideoPlayer({
-      ...videoPlayer,
+    setVideoPlaying({
+      ...videoPlaying,
       progress,
     });
   };
 
   // Progress bar function -> dragging the progress bar to where we want to watch
-  const handleProgressBar = (percent: number) => {
-    if (!displayControls) {
-      setDisplayControls(true);
-    }
-    if (videoElement) {
-      const playingTime = videoElement.duration * (percent / 100);
-      setCurrentLength(playingTime);
-    }
+  const handleProgressBar = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const manualChange = Number(e.target.value);
+    videoElement.current.currentTime =
+      (videoElement.current.duration / 100) * manualChange;
+    setVideoPlaying({
+      ...videoPlaying,
+      progress: manualChange,
+    });
   };
-
-  //   const handleProgressBar = (e: any) => {
-  //     const rePosition = Number(e.target.value);
-  //     console.log(rePosition);
-  //     videoElement.current.currentTime =
-  //       (videoElement.current.duration / 100) * rePosition;
-  //     setVideoPlayer({
-  //       ...videoPlayer,
-  //       progress: rePosition,
-  //     });
-  //   };
 
   // volume mute function
   const handleMute = () => {
-    setVideoPlayer({
-      ...videoPlayer,
-      muted: !videoPlayer.muted,
+    setVideoPlaying({
+      ...videoPlaying,
+      muted: !videoPlaying.muted,
     });
   };
 
   useEffect(() => {
-    videoPlayer.muted
+    videoPlaying.muted
       ? (videoElement.current.muted = true)
       : (videoElement.current.muted = false);
-  }, [videoPlayer.muted, videoElement]);
+  }, [videoPlaying.muted, videoElement]);
+
+  // keydown event condition
+  const handleOnKeyDown = (e: React.KeyboardEvent<HTMLVideoElement>) => {
+    console.log(videoPlaying.progress);
+
+    if (e.code === 'ArrowLeft') {
+      videoPlaying.progress -= 5;
+    } else if (e.code === 'ArrowRight') {
+      videoPlaying.progress += 5;
+    } else if (e.code === 'Space') {
+      if (videoElement.current.paused) {
+        videoElement.current.play();
+        setVideoPlaying({
+          ...videoPlaying,
+          playing: true,
+        });
+      } else {
+        videoElement.current.pause();
+        setVideoPlaying({
+          ...videoPlaying,
+          playing: false,
+        });
+      }
+    }
+  };
+
+  // mouse events
+  //   const handleOnMouseEnter = (e: MouseEvent) => {
+  //     if (videoElement.current)
+  //   };
 
   return {
-    videoPlayer,
-    handleHiddenControls,
+    videoPlaying,
+    handleDisplayControls,
     handlePlay,
-    currentLength,
-    startTime,
     totalTime,
     handleTimeUpdate,
     displayControls,
     handleProgressBar,
     handleMute,
+    handleOnKeyDown,
   };
 };

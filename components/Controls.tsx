@@ -1,35 +1,41 @@
 import Image from 'next/image';
+import React from 'react';
 import styled from 'styled-components';
 
 interface VideoProps {
-  videoPlayer: {
+  videoPlaying: {
     playing: boolean;
     progress: number;
     muted: boolean;
   };
   handlePlay: () => void;
-  currentLength: number;
-  startTime: number;
   totalTime: any;
   displayControls: boolean;
-  handleProgressBar: any;
   handleMute: () => void;
+  handleProgressBar: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Controls: React.FC<VideoProps> = ({
-  videoPlayer,
+  videoPlaying,
   handlePlay,
-  currentLength,
-  startTime,
   totalTime,
   handleProgressBar,
   handleMute,
 }) => {
+  const formatTime = (second: number) => {
+    const date = new Date(second * 1000);
+    const mm = date.getUTCMinutes();
+    const ss = date.getSeconds();
+    const minutes = (mm < 10 ? '0' : '') + mm + ':';
+    const seconds = (ss < 10 ? '0' : '') + ss;
+    return minutes + seconds;
+  };
+
   return (
     <Container>
       <PlayButton onClick={handlePlay}>
         <Image
-          src={!videoPlayer.playing ? '/images/play.png' : '/images/pause.png'}
+          src={!videoPlaying.playing ? '/images/play.png' : '/images/pause.png'}
           width={40}
           height={40}
           alt="play/pause"
@@ -39,17 +45,18 @@ const Controls: React.FC<VideoProps> = ({
       <VideoLength>
         <Range
           type="range"
-          value={currentLength}
-          max={totalTime}
-          onChange={handleProgressBar}
+          value={videoPlaying.progress}
+          min="0"
+          max="100"
+          onChange={e => handleProgressBar(e)}
         />
-        <CurrentLength>{startTime}</CurrentLength>
-        <TotalLength>{totalTime}</TotalLength>
+        <CurrentLength>{formatTime(videoPlaying.progress)}</CurrentLength>
+        <TotalLength>{formatTime(totalTime)}</TotalLength>
       </VideoLength>
 
       <VolumeButton onClick={handleMute}>
         <Image
-          src={!videoPlayer.muted ? '/images/volume.png' : '/images/mute.png'}
+          src={!videoPlaying.muted ? '/images/volume.png' : '/images/mute.png'}
           width={40}
           height={40}
           alt="volume"
@@ -102,7 +109,7 @@ const Range = styled.input`
   margin-top: 35px;
 
   &::-webkit-slider-thumb {
-    -webkit-appearance: none;
+    /* -webkit-appearance: none; */
     cursor: pointer;
     height: 6px;
   }
