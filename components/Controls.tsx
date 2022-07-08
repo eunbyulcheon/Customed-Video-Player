@@ -12,6 +12,7 @@ interface VideoProps {
   totalTime: any;
   displayControls: boolean;
   handleMute: () => void;
+  handleVolumeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleProgressBar: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleFullScreen: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
@@ -23,6 +24,7 @@ const Controls: React.FC<VideoProps> = ({
   totalTime,
   handleProgressBar,
   handleMute,
+  handleVolumeChange,
   handleFullScreen,
 }) => {
   const formatTime = (second: number) => {
@@ -46,7 +48,7 @@ const Controls: React.FC<VideoProps> = ({
       </PlayButton>
 
       <VideoLength>
-        <Range
+        <ProgressBar
           type="range"
           value={videoPlaying.progress}
           min="0"
@@ -57,6 +59,7 @@ const Controls: React.FC<VideoProps> = ({
         <TotalLength>{formatTime(totalTime)}</TotalLength>
       </VideoLength>
 
+      <VolumeBar type="range" min="0" max="1" />
       <VolumeButton onClick={handleMute}>
         <Image
           src={!videoPlaying.muted ? '/images/volume.png' : '/images/mute.png'}
@@ -103,7 +106,7 @@ const VideoLength = styled.div`
   position: relative;
 `;
 
-const Range = styled.input`
+const ProgressBar = styled.input`
   -webkit-appearance: none;
   background: rgba(255, 255, 255, 0, 2);
   border-radius: 20px;
@@ -117,7 +120,12 @@ const Range = styled.input`
     height: 6px;
   }
 
-  &::-moz-range-progress {
+  &::-moz-range-progress-bar {
+    color: #fff;
+    background-color: #e3e2e2;
+  }
+
+  &::-webkit-progress-value {
     background-color: #fff;
   }
 `;
@@ -138,6 +146,8 @@ const TotalLength = styled(CurrentLength)`
 const VolumeButton = styled.button`
   background: none;
 `;
+
+const VolumeBar = styled.input``;
 
 const FullscreenButton = styled.button`
   background: none;

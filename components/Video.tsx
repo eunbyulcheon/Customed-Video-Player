@@ -6,6 +6,7 @@ import styled from 'styled-components';
 
 const Video = () => {
   const videoElement = useRef<HTMLVideoElement>(null);
+  const containerElement = useRef<HTMLDivElement>(null);
   const {
     videoPlaying,
     handleDisplayControls,
@@ -15,22 +16,24 @@ const Video = () => {
     displayControls,
     handleProgressBar,
     handleMute,
+    handleVolumeChange,
     handleOnKeyDown,
     handleOnMouseEnter,
     handleOnMouseLeave,
     handleFullScreen,
   } = useVideoPlayer(videoElement);
 
-  console.log(videoElement);
+  //   console.log(videoElement);
 
   return (
     <VideoContainer
+      ref={containerElement}
+      tabIndex={0}
       onKeyDown={e => handleOnKeyDown(e)}
       onMouseEnter={handleOnMouseEnter}
       onMouseLeave={handleOnMouseLeave}
     >
       <VideoContent
-        tabIndex={0}
         ref={videoElement}
         onClick={handleDisplayControls}
         onTimeUpdate={handleTimeUpdate}
@@ -44,6 +47,7 @@ const Video = () => {
         displayControls={displayControls}
         handleProgressBar={handleProgressBar}
         handleMute={handleMute}
+        handleVolumeChange={handleVolumeChange}
         handleFullScreen={handleFullScreen}
       />
     </VideoContainer>

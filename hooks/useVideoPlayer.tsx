@@ -14,7 +14,7 @@ export const useVideoPlayer = (videoElement: any) => {
       setDisplayControls(true);
       setTimeout(() => {
         setDisplayControls(false);
-      }, 2000);
+      }, 3000);
     }
   };
 
@@ -57,7 +57,7 @@ export const useVideoPlayer = (videoElement: any) => {
     });
   };
 
-  // volume mute function
+  // volume mute
   const handleMute = () => {
     setVideoPlaying({
       ...videoPlaying,
@@ -71,8 +71,15 @@ export const useVideoPlayer = (videoElement: any) => {
       : (videoElement.current.muted = false);
   }, [videoPlaying.muted, videoElement]);
 
+  // volume change
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    videoElement.current.volume = e.target.value;
+  };
+
   // keydown event condition
-  const handleOnKeyDown = (e: React.KeyboardEvent): void => {
+  const handleOnKeyDown = (
+    e: React.KeyboardEvent<HTMLDivElement | HTMLVideoElement>
+  ): void => {
     if (e.code === 'ArrowLeft') {
       videoPlaying.progress -= 5;
     } else if (e.code === 'ArrowRight') {
@@ -121,6 +128,7 @@ export const useVideoPlayer = (videoElement: any) => {
     displayControls,
     handleProgressBar,
     handleMute,
+    handleVolumeChange,
     handleOnKeyDown,
     handleOnMouseEnter,
     handleOnMouseLeave,
