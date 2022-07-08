@@ -72,9 +72,7 @@ export const useVideoPlayer = (videoElement: any) => {
   }, [videoPlaying.muted, videoElement]);
 
   // keydown event condition
-  const handleOnKeyDown = (e: React.KeyboardEvent<HTMLVideoElement>) => {
-    console.log(videoPlaying.progress);
-
+  const handleOnKeyDown = (e: React.KeyboardEvent): void => {
     if (e.code === 'ArrowLeft') {
       videoPlaying.progress -= 5;
     } else if (e.code === 'ArrowRight') {
@@ -97,9 +95,22 @@ export const useVideoPlayer = (videoElement: any) => {
   };
 
   // mouse events
-  //   const handleOnMouseEnter = (e: MouseEvent) => {
-  //     if (videoElement.current)
-  //   };
+  const handleOnMouseEnter = () => {
+    setDisplayControls(true);
+  };
+
+  const handleOnMouseLeave = () => {
+    setDisplayControls(false);
+  };
+
+  // fullscreen
+  const handleFullScreen = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    if (videoElement.current.fullscreenElement) {
+      videoElement.current.exitFullscreen();
+    } else {
+      videoElement.current.requestFullscreen();
+    }
+  };
 
   return {
     videoPlaying,
@@ -111,5 +122,8 @@ export const useVideoPlayer = (videoElement: any) => {
     handleProgressBar,
     handleMute,
     handleOnKeyDown,
+    handleOnMouseEnter,
+    handleOnMouseLeave,
+    handleFullScreen,
   };
 };

@@ -16,18 +16,24 @@ const Video = () => {
     handleProgressBar,
     handleMute,
     handleOnKeyDown,
+    handleOnMouseEnter,
+    handleOnMouseLeave,
+    handleFullScreen,
   } = useVideoPlayer(videoElement);
 
-  //   console.log(videoElement);
+  console.log(videoElement);
 
   return (
-    <VideoContainer>
+    <VideoContainer
+      onKeyDown={e => handleOnKeyDown(e)}
+      onMouseEnter={handleOnMouseEnter}
+      onMouseLeave={handleOnMouseLeave}
+    >
       <VideoContent
         tabIndex={0}
         ref={videoElement}
         onClick={handleDisplayControls}
         onTimeUpdate={handleTimeUpdate}
-        onKeyDown={e => handleOnKeyDown(e)}
       >
         <source src={videoSrc} type="video/mp4" />
       </VideoContent>
@@ -38,6 +44,7 @@ const Video = () => {
         displayControls={displayControls}
         handleProgressBar={handleProgressBar}
         handleMute={handleMute}
+        handleFullScreen={handleFullScreen}
       />
     </VideoContainer>
   );

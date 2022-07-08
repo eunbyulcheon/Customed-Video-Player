@@ -13,14 +13,17 @@ interface VideoProps {
   displayControls: boolean;
   handleMute: () => void;
   handleProgressBar: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleFullScreen: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const Controls: React.FC<VideoProps> = ({
   videoPlaying,
+  displayControls,
   handlePlay,
   totalTime,
   handleProgressBar,
   handleMute,
+  handleFullScreen,
 }) => {
   const formatTime = (second: number) => {
     const date = new Date(second * 1000);
@@ -63,7 +66,7 @@ const Controls: React.FC<VideoProps> = ({
         />
       </VolumeButton>
 
-      <FullscreenButton>
+      <FullscreenButton onClick={e => handleFullScreen(e)}>
         <Image
           src="/images/fullscreen.png"
           width={40}
