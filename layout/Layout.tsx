@@ -27,6 +27,10 @@ export const GlobalStyle = createGlobalStyle`
   a{
     text-decoration: none;
   }
+
+  input {
+    outline: none;
+  }
 `;
 
 const Layout = ({ children }: { children: any }) => {

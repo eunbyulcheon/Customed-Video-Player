@@ -6,16 +6,17 @@ export const useVideoPlayer = (videoElement: any) => {
     progress: 0,
     muted: false,
   });
+
   const [displayControls, setDisplayControls] = useState(false);
 
-  // make controls visible
-  const handleDisplayControls = () => {
-    if (!displayControls) {
-      setDisplayControls(true);
-      setTimeout(() => {
-        setDisplayControls(false);
-      }, 3000);
-    }
+  // time update
+  const handleTimeUpdate = () => {
+    const progress =
+      (videoElement.current.currentTime / videoElement.current.duration) * 100;
+    setVideoPlaying({
+      ...videoPlaying,
+      progress,
+    });
   };
 
   // play/pause function
@@ -32,21 +33,11 @@ export const useVideoPlayer = (videoElement: any) => {
       : videoElement.current.pause();
   }, [videoPlaying.playing, videoElement]);
 
-  // Progress bar function -> how much has been watched
+  // Progress bar
   const totalTime =
     (videoElement && videoElement.current && videoElement.current.duration) ||
     0;
 
-  const handleTimeUpdate = () => {
-    const progress =
-      (videoElement.current.currentTime / videoElement.current.duration) * 100;
-    setVideoPlaying({
-      ...videoPlaying,
-      progress,
-    });
-  };
-
-  // Progress bar function -> dragging the progress bar to where we want to watch
   const handleProgressBar = (e: React.ChangeEvent<HTMLInputElement>) => {
     const manualChange = Number(e.target.value);
     videoElement.current.currentTime =
@@ -71,19 +62,39 @@ export const useVideoPlayer = (videoElement: any) => {
       : (videoElement.current.muted = false);
   }, [videoPlaying.muted, videoElement]);
 
-  // volume change
+  //  volume change
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    videoElement.current.volume = e.target.value;
+    if (videoElement) {
+      videoElement.current.volume = Number(e.target.value) / 100;
+    }
   };
 
-  // keydown event condition
+  // fullscreen
+  const handleFullScreen = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    if (videoElement.current.fullscreenElement) {
+      videoElement.current.exitFullscreen();
+    } else {
+      videoElement.current.requestFullscreen();
+    }
+  };
+
+  // keydown event
   const handleOnKeyDown = (
     e: React.KeyboardEvent<HTMLDivElement | HTMLVideoElement>
   ): void => {
+    let progressChange =
+      (videoElement.current.currentTime / videoElement.current.duration) * 100;
+
     if (e.code === 'ArrowLeft') {
-      videoPlaying.progress -= 5;
+      setVideoPlaying({
+        ...videoPlaying,
+        progress: (progressChange -= 5),
+      });
     } else if (e.code === 'ArrowRight') {
-      videoPlaying.progress += 5;
+      setVideoPlaying({
+        ...videoPlaying,
+        progress: (progressChange += 5),
+      });
     } else if (e.code === 'Space') {
       if (videoElement.current.paused) {
         videoElement.current.play();
@@ -110,12 +121,13 @@ export const useVideoPlayer = (videoElement: any) => {
     setDisplayControls(false);
   };
 
-  // fullscreen
-  const handleFullScreen = (e: React.MouseEvent<HTMLButtonElement>): void => {
-    if (videoElement.current.fullscreenElement) {
-      videoElement.current.exitFullscreen();
-    } else {
-      videoElement.current.requestFullscreen();
+  // make controls visible
+  const handleDisplayControls = () => {
+    if (!displayControls) {
+      setDisplayControls(true);
+      setTimeout(() => {
+        setDisplayControls(false);
+      }, 3000);
     }
   };
 

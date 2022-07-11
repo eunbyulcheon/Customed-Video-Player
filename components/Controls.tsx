@@ -1,5 +1,5 @@
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import Image from 'next/image';
-import React from 'react';
 import styled from 'styled-components';
 
 interface VideoProps {
@@ -19,12 +19,11 @@ interface VideoProps {
 
 const Controls: React.FC<VideoProps> = ({
   videoPlaying,
-  displayControls,
   handlePlay,
   totalTime,
   handleProgressBar,
-  handleMute,
   handleVolumeChange,
+  handleMute,
   handleFullScreen,
 }) => {
   const formatTime = (second: number) => {
@@ -59,7 +58,7 @@ const Controls: React.FC<VideoProps> = ({
         <TotalLength>{formatTime(totalTime)}</TotalLength>
       </VideoLength>
 
-      <VolumeBar type="range" min="0" max="1" />
+      <VolumeBar type="range" onChange={e => handleVolumeChange(e)} />
       <VolumeButton onClick={handleMute}>
         <Image
           src={!videoPlaying.muted ? '/images/volume.png' : '/images/mute.png'}
@@ -147,7 +146,9 @@ const VolumeButton = styled.button`
   background: none;
 `;
 
-const VolumeBar = styled.input``;
+const VolumeBar = styled.input`
+  margin: 0 10px 0 20px;
+`;
 
 const FullscreenButton = styled.button`
   background: none;
