@@ -7,6 +7,7 @@ interface VideoProps {
     playing: boolean;
     progress: number;
     muted: boolean;
+    volume: number;
   };
   handlePlay: () => void;
   totalTime: any;
@@ -58,7 +59,15 @@ const Controls: React.FC<VideoProps> = ({
         <TotalLength>{formatTime(totalTime)}</TotalLength>
       </VideoLength>
 
-      <VolumeBar type="range" onChange={e => handleVolumeChange(e)} />
+      {!videoPlaying.muted && (
+        <VolumeBar
+          type="range"
+          min={0}
+          max={100}
+          value={videoPlaying.volume * 100}
+          onChange={e => handleVolumeChange(e)}
+        />
+      )}
       <VolumeButton onClick={handleMute}>
         <Image
           src={!videoPlaying.muted ? '/images/volume.png' : '/images/mute.png'}

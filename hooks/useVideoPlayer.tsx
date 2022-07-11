@@ -5,8 +5,8 @@ export const useVideoPlayer = (videoElement: any) => {
     playing: false,
     progress: 0,
     muted: false,
+    volume: 0.5,
   });
-
   const [displayControls, setDisplayControls] = useState(false);
 
   // time update
@@ -64,9 +64,12 @@ export const useVideoPlayer = (videoElement: any) => {
 
   //  volume change
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    if (videoElement) {
-      videoElement.current.volume = Number(e.target.value) / 100;
-    }
+    let newValue = Number(e.currentTarget.value);
+    setVideoPlaying({
+      ...videoPlaying,
+      volume: (videoElement.current.volume / 100) * newValue,
+      muted: newValue === 0 ? true : false,
+    });
   };
 
   // fullscreen
@@ -79,9 +82,7 @@ export const useVideoPlayer = (videoElement: any) => {
   };
 
   // keydown event
-  const handleOnKeyDown = (
-    e: React.KeyboardEvent<HTMLDivElement | HTMLVideoElement>
-  ): void => {
+  const handleOnKeyDown = (e: React.KeyboardEvent<HTMLDivElement>): void => {
     let progressChange =
       (videoElement.current.currentTime / videoElement.current.duration) * 100;
 
