@@ -28,8 +28,12 @@ const Video = () => {
   const playAd = () => {
     let timer = setTimeout(() => {
       setAd(true);
+      videoPlaying.muted = true;
+      videoPlaying.playing = false;
       timer = setTimeout(() => {
         setAd(false);
+        videoPlaying.muted = false;
+        videoPlaying.playing = true;
       }, 15000);
     }, 5000);
   };

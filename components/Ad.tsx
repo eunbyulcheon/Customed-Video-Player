@@ -47,7 +47,7 @@ const SkipMessage = styled.div`
   background: rgba(225, 225, 225, 0.5);
 
   &:hover {
-    box-shadow: 0 5px 5px rgba(225, 225, 225, 0.3);
+    box-shadow: 0 3px 3px rgba(225, 225, 225, 0.3);
   }
 `;
 

@@ -116,25 +116,22 @@ const VideoLength = styled.div`
 
 const ProgressBar = styled.input`
   -webkit-appearance: none;
-  background: rgba(255, 255, 255, 0, 2);
-  border-radius: 20px;
-  height: 6px;
+  -moz-appearance: none;
+  outline: none;
+  height: 8px;
   width: 800px;
   margin-top: 35px;
+  border-radius: 20px;
+  background: ${props =>
+    `linear-gradient(to right, #fff 0%, #fff ${props.value}%, #ffffff7f ${props.value}%, #ffffff7f 100%);`};
 
   &::-webkit-slider-thumb {
-    /* -webkit-appearance: none; */
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background-image: radial-gradient(circle, #ffffff7f 40%, #fff 45%);
+    border-radius: 50%;
     cursor: pointer;
-    height: 6px;
-  }
-
-  &::-moz-range-progress-bar {
-    color: #fff;
-    background-color: #e3e2e2;
-  }
-
-  &::-webkit-progress-value {
-    background-color: #fff;
   }
 `;
 
@@ -151,12 +148,33 @@ const TotalLength = styled(CurrentLength)`
   left: 760px;
 `;
 
-const VolumeButton = styled.button`
-  background: none;
+const VolumeBar = styled.input`
+  position: absolute;
+  right: 119px;
+  bottom: 105px;
+  width: 80px;
+  height: 8px;
+  transform: rotate(270deg);
+  transform-origin: center;
+  outline: none;
+  border-radius: 20px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: ${props =>
+    `linear-gradient(to right, #fff 0%, #fff ${props.value}%, #ffffff7f ${props.value}%, #ffffff7f 100%);`};
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background-image: radial-gradient(circle, #ffffff7f 40%, #fff 45%);
+    border-radius: 50%;
+    cursor: pointer;
+  }
 `;
 
-const VolumeBar = styled.input`
-  margin: 0 10px 0 20px;
+const VolumeButton = styled.button`
+  background: none;
 `;
 
 const FullscreenButton = styled.button`
