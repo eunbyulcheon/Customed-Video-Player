@@ -1,22 +1,6 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import styled from 'styled-components';
-
-interface VideoProps {
-  videoPlaying: {
-    playing: boolean;
-    progress: number;
-    muted: boolean;
-    volume: number;
-  };
-  handlePlay: () => void;
-  totalTime: any;
-  displayControls: boolean;
-  handleMute: () => void;
-  handleVolumeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleProgressBar: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleFullScreen: (e: React.MouseEvent<HTMLButtonElement>) => void;
-}
+import { VideoProps } from '../lib/interfaces';
 
 const Controls: React.FC<VideoProps> = ({
   videoPlaying,
@@ -53,7 +37,7 @@ const Controls: React.FC<VideoProps> = ({
           value={videoPlaying.progress}
           min="0"
           max="100"
-          onChange={e => handleProgressBar(e)}
+          onChange={handleProgressBar}
         />
         <CurrentLength>{formatTime(videoPlaying.progress)}</CurrentLength>
         <TotalLength>{formatTime(totalTime)}</TotalLength>
@@ -65,7 +49,7 @@ const Controls: React.FC<VideoProps> = ({
           min={0}
           max={100}
           value={videoPlaying.volume * 100}
-          onChange={e => handleVolumeChange(e)}
+          onChange={handleVolumeChange}
         />
       )}
       <VolumeButton onClick={handleMute}>
@@ -77,7 +61,7 @@ const Controls: React.FC<VideoProps> = ({
         />
       </VolumeButton>
 
-      <FullscreenButton onClick={e => handleFullScreen(e)}>
+      <FullscreenButton onClick={handleFullScreen}>
         <Image
           src="/images/fullscreen.png"
           width={40}
