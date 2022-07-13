@@ -4,17 +4,17 @@ import Image from 'next/image';
 import styled from 'styled-components';
 
 interface AdProp {
-  setAd: Dispatch<SetStateAction<boolean>>;
+  setAdPlaying: Dispatch<SetStateAction<boolean>>;
   endAd: () => void;
 }
 
-const Ad = ({ setAd, endAd }: AdProp) => {
+const Ad = ({ setAdPlaying, endAd }: AdProp) => {
   return (
     <Container>
       <AdContent controls={false} autoPlay onEnded={endAd}>
         <source src={adSrc} type="video/mp4" />
       </AdContent>
-      <SkipMessage onClick={() => setAd(false)}>
+      <SkipMessage onClick={() => setAdPlaying(false)}>
         <Text>광고 건너뛰기</Text>
         <Image src="/images/skip.png" width={42} height={42} alt="skip icon" />
       </SkipMessage>

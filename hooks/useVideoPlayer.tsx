@@ -8,6 +8,8 @@ export const useVideoPlayer = (videoElement: any) => {
     volume: 0.5,
   });
   const [displayControls, setDisplayControls] = useState(false);
+  const [fullscreen, setFullscreen] = useState(false);
+  const [adPlaying, setAdPlaying] = useState(false);
 
   // time update
   const handleTimeUpdate = () => {
@@ -76,8 +78,10 @@ export const useVideoPlayer = (videoElement: any) => {
   const handleFullScreen = (e: React.MouseEvent<HTMLButtonElement>): void => {
     if (videoElement.current.fullscreenElement) {
       videoElement.current.exitFullscreen();
+      setFullscreen(false);
     } else {
       videoElement.current.requestFullscreen();
+      setFullscreen(true);
     }
   };
 
@@ -132,6 +136,27 @@ export const useVideoPlayer = (videoElement: any) => {
     }
   };
 
+  // ad
+  const playAd = () => {
+    let timer = setTimeout(() => {
+      setAdPlaying(true);
+      setVideoPlaying({
+        ...videoPlaying,
+        playing: false,
+        progress: videoElement.current.currentTime,
+        muted: true,
+      });
+
+      timer = setTimeout(() => {
+        setAdPlaying(false);
+      }, 15000);
+    }, 30000);
+  };
+
+  const endAd = () => {
+    setAdPlaying(false);
+  };
+
   return {
     videoPlaying,
     handleDisplayControls,
@@ -146,5 +171,10 @@ export const useVideoPlayer = (videoElement: any) => {
     handleOnMouseEnter,
     handleOnMouseLeave,
     handleFullScreen,
+    fullscreen,
+    adPlaying,
+    setAdPlaying,
+    playAd,
+    endAd,
   };
 };

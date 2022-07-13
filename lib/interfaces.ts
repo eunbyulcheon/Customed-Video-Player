@@ -11,6 +11,7 @@ interface VideoPlayingProp {
     totalTime: any;
     displayControls: boolean;
     handleMute: () => void;
+    fullscreen: boolean;
     handleVolumeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleProgressBar: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleFullScreen: (e: React.MouseEvent<HTMLButtonElement>) => void;

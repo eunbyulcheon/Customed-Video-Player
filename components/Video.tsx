@@ -1,13 +1,13 @@
 import { useState, useRef } from 'react';
 import { videoSrc } from '../lib/sources';
 import { useVideoPlayer } from '../hooks/useVideoPlayer';
-import Ad from './Ad';
 import Controls from './Controls';
+import Spinner from './Spinner';
+import Ad from './Ad';
 import styled from 'styled-components';
 
 const Video = () => {
   const videoElement = useRef<HTMLVideoElement>(null);
-  const [ad, setAd] = useState(false);
 
   const {
     videoPlaying,
@@ -23,24 +23,12 @@ const Video = () => {
     handleOnMouseEnter,
     handleOnMouseLeave,
     handleFullScreen,
+    fullscreen,
+    adPlaying,
+    setAdPlaying,
+    playAd,
+    endAd,
   } = useVideoPlayer(videoElement);
-
-  const playAd = () => {
-    let timer = setTimeout(() => {
-      setAd(true);
-      videoPlaying.muted = true;
-      videoPlaying.playing = false;
-      timer = setTimeout(() => {
-        setAd(false);
-        videoPlaying.muted = false;
-        videoPlaying.playing = true;
-      }, 15000);
-    }, 5000);
-  };
-
-  const endAd = () => {
-    setAd(false);
-  };
 
   return (
     <VideoContainer
@@ -58,6 +46,7 @@ const Video = () => {
       >
         <source src={videoSrc} type="video/mp4" />
       </VideoContent>
+      {videoElement.current?.networkState === 2 ? <Spinner /> : null}
       {displayControls && (
         <Controls
           videoPlaying={videoPlaying}
@@ -68,9 +57,10 @@ const Video = () => {
           handleMute={handleMute}
           handleVolumeChange={handleVolumeChange}
           handleFullScreen={handleFullScreen}
+          fullscreen={fullscreen}
         />
       )}
-      {ad && <Ad setAd={setAd} endAd={endAd} />}
+      {adPlaying && <Ad setAdPlaying={setAdPlaying} endAd={endAd} />}
     </VideoContainer>
   );
 };

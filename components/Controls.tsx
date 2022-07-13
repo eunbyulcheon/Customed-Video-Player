@@ -10,6 +10,7 @@ const Controls: React.FC<VideoProps> = ({
   handleVolumeChange,
   handleMute,
   handleFullScreen,
+  fullscreen,
 }) => {
   const formatTime = (second: number) => {
     const date = new Date(second * 1000);
@@ -63,7 +64,9 @@ const Controls: React.FC<VideoProps> = ({
 
       <FullscreenButton onClick={handleFullScreen}>
         <Image
-          src="/images/fullscreen.png"
+          src={
+            fullscreen ? '/images/fullscreen.png' : '/images/fullscreenExit.png'
+          }
           width={40}
           height={40}
           alt="fullscreen"
